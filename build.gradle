@@ -7,12 +7,14 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-}
+    implementation "org.apache.camel:camel-core:${camelVersion}"
+    implementation "org.apache.camel:camel-main:${camelVersion}"
 
-test {
-    useJUnitPlatform()
+    implementation "org.slf4j:slf4j-api:1.7.26"
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.apache.camel:camel-test:${camelVersion}"
 }
 
 jar {
