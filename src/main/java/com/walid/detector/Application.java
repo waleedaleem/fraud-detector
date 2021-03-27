@@ -1,15 +1,13 @@
-package com.walid;
+package com.walid.detector;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import org.apache.camel.component.dataset.DataSet;
-import org.apache.camel.component.dataset.SimpleDataSet;
 import org.apache.camel.main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.walid.routes.AggregateRouteBuilder;
+import com.walid.detector.route.AggregateRouteBuilder;
 
 public class Application {
 
