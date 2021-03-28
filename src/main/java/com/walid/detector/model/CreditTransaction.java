@@ -55,8 +55,21 @@ public class CreditTransaction {
     }
 
     public BigDecimal getCreditTotal() {
-        return forerunners.stream().map(CreditTransaction::getAmount).reduce(
-                getAmount(), BigDecimal::add);
+        // @formatter:off
+        return forerunners.stream()
+            .map(CreditTransaction::getAmount)
+            .reduce(getAmount(), BigDecimal::add);
+        // @formatter:on
+    }
+
+    public Date getEarliestPurchaseTime() {
+        // @formatter:off
+        return forerunners.stream()
+            .map(CreditTransaction::getTimestamp)
+            .sorted()
+            .findFirst()
+            .orElse(timestamp);
+        // @formatter:on
     }
 
     public void aggregate(CreditTransaction forerunner) {

@@ -7,7 +7,7 @@ import org.apache.camel.main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.walid.detector.route.AggregateRouteBuilder;
+import com.walid.detector.controller.AggregateRouteBuilder;
 
 public class Application {
 
@@ -17,7 +17,6 @@ public class Application {
     };
 
     public static void main(String[] args) throws Exception {
-
         if (args.length != 2 || Arrays.asList(HELP_ALIASES).contains(args[0])) {
             logger.warn("usage: java -jar fraud-detector-x.y.z.jar <price threshold> <input file>");
             System.exit(0);

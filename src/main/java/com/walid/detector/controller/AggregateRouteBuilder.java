@@ -1,27 +1,27 @@
-package com.walid.detector.route;
+package com.walid.detector.controller;
 
 import java.io.File;
 import java.math.BigDecimal;
 
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.BindyType;
 
 import com.walid.detector.model.CreditTransaction;
 import com.walid.detector.service.TransactionAggregator;
+import com.walid.detector.view.FraudReporter;
 
 public class AggregateRouteBuilder extends RouteBuilder {
 
     private static final String ROUTE_ID = "fraud-detector";
 
-    private final BigDecimal priceThreshold;
     private final File transactionFile;
     private final TransactionAggregator aggregator;
+    private final FraudReporter fraudReporter;
 
     public AggregateRouteBuilder(BigDecimal priceThreshold, String transactionFile) {
         super();
-        this.priceThreshold = priceThreshold;
         this.aggregator = new TransactionAggregator(priceThreshold);
+        this.fraudReporter = new FraudReporter(priceThreshold);
         this.transactionFile = new File(transactionFile);
     }
 
@@ -31,13 +31,14 @@ public class AggregateRouteBuilder extends RouteBuilder {
         String fileName = transactionFile.getName();
 
         // @formatter:off
-        fromF("file://%s?fileName=%s&noop=true", directoryName, fileName)
+        fromF("file://%s?fileName=%s", directoryName, fileName)
             .routeId(ROUTE_ID)
             .split(body().tokenize("\n"))
             .streaming()
             .unmarshal()
             .bindy(BindyType.Csv, CreditTransaction.class)
             .aggregate(simple("${body?.cardHash}"), aggregator)
-            .log(LoggingLevel.WARN, "C.C ${body?.cardHash} exceeded the $" + priceThreshold +" limit.");
+            .bean(fraudReporter);
+        // @formatter:on
     }
 }
