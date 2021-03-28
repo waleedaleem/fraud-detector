@@ -1,5 +1,7 @@
 package com.walid.detector;
 
+import static com.walid.detector.controller.AggregateRouteBuilder.FRAUD_REPORTER_ID;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -8,7 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.walid.detector.controller.AggregateRouteBuilder;
+import com.walid.detector.view.FraudReporter;
 
+/**
+ * The Main class of this standalone Java application
+ * 
+ * @author wmoustaf
+ */
 public class Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -30,7 +38,8 @@ public class Application {
             throws Exception {
         Main main = new Main();
         main.configure().addRoutesBuilder(
-                new AggregateRouteBuilder(priceThreshold, transactionFile));
+                new AggregateRouteBuilder(priceThreshold, transactionFile, true));
+        main.bind(FRAUD_REPORTER_ID, new FraudReporter(priceThreshold));
 
         // now keep the application running until the JVM is terminated
         main.run();

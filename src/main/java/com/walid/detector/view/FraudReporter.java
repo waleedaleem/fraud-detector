@@ -7,12 +7,21 @@ import org.slf4j.LoggerFactory;
 
 import com.walid.detector.model.CreditTransaction;
 
+/**
+ * This is the View layer of the overall MVC architecture and it simply logs suspect cards as WARN
+ *
+ * @author wmoustaf
+ */
 public class FraudReporter {
 
     private static final Logger logger = LoggerFactory.getLogger(FraudReporter.class);
-    private final BigDecimal priceThreshold;
+    private BigDecimal priceThreshold;
 
     public FraudReporter(BigDecimal priceThreshold) {
+        this.priceThreshold = priceThreshold;
+    }
+
+    public void setPriceThreshold(BigDecimal priceThreshold) {
         this.priceThreshold = priceThreshold;
     }
 
