@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.camel.RoutesBuilder;
-import org.apache.camel.builder.AdviceWith;
-import org.apache.camel.builder.AdviceWithRouteBuilder;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
@@ -24,14 +24,20 @@ public class AggregateRouteBuilderTest extends CamelTestSupport {
     private static final String TEST_FILE = "src/test/resources/testTransactions.csv";
     private AggregateRouteBuilder aggregateRoute;
     private FraudReporter fraudReporter;
+    private BigDecimal priceThreshold = new BigDecimal("150.00");
 
     @Override
     protected RoutesBuilder createRouteBuilder() {
-        BigDecimal priceThreshold = new BigDecimal("150.00");
-        fraudReporter = new FraudReporter(priceThreshold);
-        context.getRegistry().bind(FRAUD_REPORTER_ID, fraudReporter);
         aggregateRoute = new AggregateRouteBuilder(priceThreshold, TEST_FILE, false);
         return aggregateRoute;
+    }
+
+    @Override
+    protected JndiRegistry createRegistry() throws Exception {
+        fraudReporter = new FraudReporter(priceThreshold);
+        JndiRegistry jndi = super.createRegistry();
+        jndi.bind(FRAUD_REPORTER_ID, fraudReporter);
+        return jndi;
     }
 
     @Test
@@ -62,7 +68,7 @@ public class AggregateRouteBuilderTest extends CamelTestSupport {
     public List<String> findSuspectCards() throws Exception {
         List<CreditTransaction> suspectTransactions = new ArrayList<>();
         RouteDefinition route = context.getRouteDefinitions().get(0);
-        AdviceWith.adviceWith(route, context, new AdviceWithRouteBuilder() {
+        route.adviceWith(context, new RouteBuilder() {
 
             @Override
             public void configure() {

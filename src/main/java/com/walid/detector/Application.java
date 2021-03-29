@@ -37,8 +37,7 @@ public class Application {
     private static void startAggregateRoute(BigDecimal priceThreshold, String transactionFile)
             throws Exception {
         Main main = new Main();
-        main.configure().addRoutesBuilder(
-                new AggregateRouteBuilder(priceThreshold, transactionFile, true));
+        main.addRouteBuilder(new AggregateRouteBuilder(priceThreshold, transactionFile, true));
         main.bind(FRAUD_REPORTER_ID, new FraudReporter(priceThreshold));
 
         // now keep the application running until the JVM is terminated

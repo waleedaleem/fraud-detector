@@ -2,9 +2,9 @@ package com.walid.detector.service;
 
 import java.math.BigDecimal;
 
-import org.apache.camel.AggregationStrategy;
 import org.apache.camel.Exchange;
 import org.apache.camel.Predicate;
+import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
